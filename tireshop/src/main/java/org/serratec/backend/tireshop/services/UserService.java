@@ -8,6 +8,7 @@ import org.serratec.backend.tireshop.models.UserModel;
 import org.serratec.backend.tireshop.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -16,16 +17,20 @@ public class UserService {
 
 	@Autowired
 	UserRepository userRepository;
+	
+	@Autowired
+	PasswordEncoder passwordEncoder;
 
 	public UserDto modelToDto(UserModel user, UserDto userDto) {
 		userDto.setLogin(user.getLogin());
 		userDto.setPassword(user.getPassword());
+		userDto.setIdUser(user.getIdUser());
 		return userDto;
 	}
-
+	
 	public UserModel dtoToModel(UserModel user, UserDto userDto) {
 		user.setLogin(userDto.getLogin());
-		user.setPassword(userDto.getPassword());
+		user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 		return user;
 	}
 
