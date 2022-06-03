@@ -1,2 +1,2 @@
 # Tireshop-SpringBoot-JWT
-Estudo de Java, API, SpringBoot, Jwt Web Tokken e SQL
+Estudo de Java, API, SpringBoot, Json Web Tokken e SQL
