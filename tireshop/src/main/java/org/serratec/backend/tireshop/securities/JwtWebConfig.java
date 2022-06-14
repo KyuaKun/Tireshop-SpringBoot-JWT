@@ -23,9 +23,17 @@ public class JwtWebConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private JwtRequestFilter jwtRequestsFilter;
 
-	@Override
+	@Override  //Define de onde virá os usuários e senhas
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetail);
+	}
+
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http.csrf().disable().authorizeRequests().antMatchers("/tireshop-user/authenticate", "/tireshop-user")
+				.permitAll().anyRequest().authenticated().and().sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		http.addFilterBefore(jwtRequestsFilter, UsernamePasswordAuthenticationFilter.class);
 	}
 
 	@Override
@@ -40,15 +48,7 @@ public class JwtWebConfig extends WebSecurityConfigurerAdapter {
 				"/swagger-resources/**");
 	}
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable().authorizeRequests().antMatchers("/tireshop-user/authenticate", "/tireshop-user")
-				.permitAll().anyRequest().authenticated().and().sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		http.addFilterBefore(jwtRequestsFilter, UsernamePasswordAuthenticationFilter.class);
-	}
-
-	@Bean
+	@Bean  // criptografa a senha usando BCrypt
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
